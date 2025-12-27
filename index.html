@@ -976,7 +976,7 @@
                     <input type="password" id="admin-password" placeholder="Ingresa la contraseña">
                 </div>
                 <div class="form-group">
-                    <p style="font-size: 12px; color: #777; margin-top: -10px;">Contraseña: <strong></strong></p>
+                    <p style="font-size: 12px; color: #777; margin-top: -10px;">Contraseña: <strong>admin123</strong></p>
                 </div>
                 <div class="login-actions">
                     <button class="btn btn-admin" id="login-admin">Entrar como Admin</button>
@@ -1109,7 +1109,7 @@
                     <button class="btn btn-admin" id="save-site-title-btn" style="margin-top: 10px;">Guardar Título</button>
                 </div>
                 
-                <!-- NUEVO: Selector de color principal -->
+                <!-- Selector de color principal -->
                 <div class="form-group">
                     <label for="site-color-input">Color Principal del Sitio:</label>
                     <div style="display: flex; align-items: center; gap: 10px; margin-top: 5px;">
@@ -1133,6 +1133,35 @@
                     <button class="btn btn-admin" id="save-logo-btn" style="margin-top: 10px;">Guardar Logo</button>
                     <button class="btn" id="remove-logo-btn" style="background: #777; margin-top: 10px; margin-left: 10px;">Eliminar Logo</button>
                 </div>
+            </div>
+            
+            <!-- NUEVO: Configuración de WhatsApp -->
+            <div class="admin-section">
+                <h3>Configuración de WhatsApp</h3>
+                <div class="form-group">
+                    <label for="whatsapp-number">Número de WhatsApp para pedidos:</label>
+                    <input type="text" id="whatsapp-number" placeholder="Ej: +573196968646">
+                    <p style="font-size: 12px; color: #777; margin-top: 5px;">Número al que se enviarán los pedidos. Formato: +CódigoPaísNúmero</p>
+                    <button class="btn btn-admin" id="save-whatsapp-btn" style="margin-top: 10px;">Guardar Número</button>
+                    <button class="btn" id="reset-whatsapp-btn" style="background: #777; margin-top: 10px; margin-left: 10px;">Restaurar Predeterminado</button>
+                </div>
+            </div>
+            
+            <!-- NUEVO: Configuración del Hero de la página principal -->
+            <div class="admin-section">
+                <h3>Texto de la Página Principal</h3>
+                <div class="form-group">
+                    <label for="hero-title">Título Principal:</label>
+                    <input type="text" id="hero-title" placeholder="Ej: Moda a tu puerta en minutos">
+                    <p style="font-size: 12px; color: #777; margin-top: 5px;">Este es el título grande que aparece en la sección principal.</p>
+                </div>
+                <div class="form-group">
+                    <label for="hero-description">Descripción del Hero:</label>
+                    <textarea id="hero-description" placeholder="Ej: Descubre las últimas tendencias en moda con entrega rápida. Ropa, calzado y accesorios para toda ocasión." rows="3"></textarea>
+                    <p style="font-size: 12px; color: #777; margin-top: 5px;">Este es el texto descriptivo que aparece debajo del título.</p>
+                </div>
+                <button class="btn btn-admin" id="save-hero-text-btn" style="margin-top: 10px;">Guardar Texto</button>
+                <button class="btn" id="reset-hero-text-btn" style="background: #777; margin-top: 10px; margin-left: 10px;">Restaurar Texto Predeterminado</button>
             </div>
         </div>
     </div>
@@ -1219,10 +1248,21 @@
             const saveSiteTitleBtn = document.getElementById('save-site-title-btn');
             const pageTitleElement = document.getElementById('page-title');
             
-            // NUEVOS: Elementos para cambio de color
+            // Elementos para cambio de color
             const siteColorInput = document.getElementById('site-color-input');
             const saveSiteColorBtn = document.getElementById('save-site-color-btn');
             const resetSiteColorBtn = document.getElementById('reset-site-color-btn');
+            
+            // Elementos para configuración de WhatsApp
+            const whatsappNumberInput = document.getElementById('whatsapp-number');
+            const saveWhatsAppBtn = document.getElementById('save-whatsapp-btn');
+            const resetWhatsAppBtn = document.getElementById('reset-whatsapp-btn');
+            
+            // NUEVO: Elementos para configuración del hero
+            const heroTitleInput = document.getElementById('hero-title');
+            const heroDescriptionInput = document.getElementById('hero-description');
+            const saveHeroTextBtn = document.getElementById('save-hero-text-btn');
+            const resetHeroTextBtn = document.getElementById('reset-hero-text-btn');
             
             // Variables globales
             let cart = [];
@@ -1288,7 +1328,7 @@
                 }
             }
             
-            // NUEVA: Función para cargar el color del sitio desde localStorage
+            // Función para cargar el color del sitio desde localStorage
             function loadSiteColor() {
                 const savedSiteColor = localStorage.getItem('tuscurvassitecolor');
                 
@@ -1309,7 +1349,62 @@
                 }
             }
             
-            // NUEVA: Función para aplicar el color al sitio
+            // Función para cargar el número de WhatsApp desde localStorage
+            function loadWhatsAppNumber() {
+                const savedWhatsApp = localStorage.getItem('tuscurvaswhatsapp');
+                
+                if (whatsappNumberInput) {
+                    if (savedWhatsApp) {
+                        whatsappNumberInput.value = savedWhatsApp;
+                    } else {
+                        // Valor por defecto
+                        whatsappNumberInput.value = '+573196968646';
+                    }
+                }
+            }
+            
+            // NUEVA: Función para cargar el texto del hero desde localStorage
+            function loadHeroText() {
+                const savedHeroTitle = localStorage.getItem('tuscurvasherotitle');
+                const savedHeroDescription = localStorage.getItem('tuscurvasherodescription');
+                
+                if (heroTitleInput && heroDescriptionInput) {
+                    if (savedHeroTitle) {
+                        heroTitleInput.value = savedHeroTitle;
+                    } else {
+                        // Valor por defecto
+                        heroTitleInput.value = 'Moda a tu puerta en minutos';
+                    }
+                    
+                    if (savedHeroDescription) {
+                        heroDescriptionInput.value = savedHeroDescription;
+                    } else {
+                        // Valor por defecto
+                        heroDescriptionInput.value = 'Descubre las últimas tendencias en moda con entrega rápida. Ropa, calzado y accesorios para toda ocasión.';
+                    }
+                }
+                
+                // Actualizar el hero en la página si ya está cargado
+                updateHeroInPage();
+            }
+            
+            // NUEVA: Función para actualizar el hero en la página
+            function updateHeroInPage() {
+                const heroTitleElement = document.querySelector('.hero h1');
+                const heroDescriptionElement = document.querySelector('.hero p');
+                
+                if (heroTitleElement) {
+                    const savedTitle = localStorage.getItem('tuscurvasherotitle') || 'Moda a tu puerta en minutos';
+                    heroTitleElement.textContent = savedTitle;
+                }
+                
+                if (heroDescriptionElement) {
+                    const savedDescription = localStorage.getItem('tuscurvasherodescription') || 'Descubre las últimas tendencias en moda con entrega rápida. Ropa, calzado y accesorios para toda ocasión.';
+                    heroDescriptionElement.textContent = savedDescription;
+                }
+            }
+            
+            // Función para aplicar el color al sitio
             function applySiteColor(color) {
                 document.documentElement.style.setProperty('--primary-color', color);
                 
@@ -1320,7 +1415,7 @@
                 updateColorDependentElements(color);
             }
             
-            // NUEVA: Función para actualizar botones con el color primario
+            // Función para actualizar botones con el color primario
             function updateAllPrimaryButtons(color) {
                 document.querySelectorAll('.btn').forEach(btn => {
                     if (!btn.classList.contains('btn-admin') && !btn.classList.contains('btn-category')) {
@@ -1339,7 +1434,7 @@
                 });
             }
             
-            // NUEVA: Función para actualizar elementos que dependen del color
+            // Función para actualizar elementos que dependen del color
             function updateColorDependentElements(color) {
                 // Actualizar ícono del carrito
                 document.querySelectorAll('.cart-icon').forEach(icon => {
@@ -1383,7 +1478,7 @@
                 });
             }
             
-            // NUEVA: Función para actualizar la vista previa del color
+            // Función para actualizar la vista previa del color
             function updateColorPreview(color) {
                 const colorPreview = document.getElementById('color-preview');
                 const colorText = document.getElementById('current-color-text');
@@ -1392,7 +1487,7 @@
                 if (colorText) colorText.textContent = color;
             }
             
-            // NUEVA: Función para guardar el color del sitio
+            // Función para guardar el color del sitio
             function saveSiteColor() {
                 const newColor = siteColorInput.value;
                 
@@ -1411,7 +1506,7 @@
                 alert('Color del sitio actualizado correctamente');
             }
             
-            // NUEVA: Función para restablecer el color predeterminado
+            // Función para restablecer el color predeterminado
             function resetSiteColor() {
                 if (confirm('¿Estás seguro de restaurar el color predeterminado?')) {
                     const defaultColor = '#e91e63';
@@ -1426,7 +1521,87 @@
                 }
             }
             
-            // NUEVA: Inicializar vista previa del color
+            // Función para guardar el número de WhatsApp
+            function saveWhatsAppNumber() {
+                const newNumber = whatsappNumberInput.value.trim();
+                
+                if (!newNumber) {
+                    alert('Por favor ingresa un número de WhatsApp');
+                    return;
+                }
+                
+                // Validar formato básico
+                if (!newNumber.startsWith('+')) {
+                    alert('Por favor incluye el código del país. Ej: +57...');
+                    return;
+                }
+                
+                // Guardar en localStorage
+                localStorage.setItem('tuscurvaswhatsapp', newNumber);
+                
+                alert('Número de WhatsApp actualizado correctamente');
+            }
+            
+            // Función para restablecer el número de WhatsApp predeterminado
+            function resetWhatsAppNumber() {
+                if (confirm('¿Estás seguro de restablecer el número de WhatsApp al predeterminado?')) {
+                    localStorage.removeItem('tuscurvaswhatsapp');
+                    
+                    if (whatsappNumberInput) {
+                        whatsappNumberInput.value = '+573196968646';
+                    }
+                    
+                    alert('Número de WhatsApp restablecido al predeterminado');
+                }
+            }
+            
+            // NUEVA: Función para guardar el texto del hero
+            function saveHeroText() {
+                const newTitle = heroTitleInput.value.trim();
+                const newDescription = heroDescriptionInput.value.trim();
+                
+                if (!newTitle) {
+                    alert('Por favor ingresa un título para la sección principal');
+                    return;
+                }
+                
+                if (!newDescription) {
+                    alert('Por favor ingresa una descripción para la sección principal');
+                    return;
+                }
+                
+                // Guardar en localStorage
+                localStorage.setItem('tuscurvasherotitle', newTitle);
+                localStorage.setItem('tuscurvasherodescription', newDescription);
+                
+                // Actualizar en la página
+                updateHeroInPage();
+                
+                alert('Texto de la página principal actualizado correctamente');
+            }
+            
+            // NUEVA: Función para restablecer el texto del hero predeterminado
+            function resetHeroText() {
+                if (confirm('¿Estás seguro de restablecer el texto de la página principal al predeterminado?')) {
+                    localStorage.removeItem('tuscurvasherotitle');
+                    localStorage.removeItem('tuscurvasherodescription');
+                    
+                    if (heroTitleInput) {
+                        heroTitleInput.value = 'Moda a tu puerta en minutos';
+                    }
+                    
+                    if (heroDescriptionInput) {
+                        heroDescriptionInput.value = 'Descubre las últimas tendencias en moda con entrega rápida. Ropa, calzado y accesorios para toda ocasión.';
+                    }
+                    
+                    // Actualizar en la página
+                    updateHeroInPage();
+                    
+                    alert('Texto restablecido al predeterminado');
+                }
+            }
+            
+            // Inicializar vista previa del color
             function initColorPreview() {
                 if (siteColorInput) {
                     // Configurar evento para vista previa en tiempo real
@@ -1542,6 +1717,8 @@
             loadSiteName();
             loadSiteTitle();
             loadSiteColor();
+            loadWhatsAppNumber();
+            loadHeroText(); // Cargar texto del hero
             initColorPreview();
             
             // Categorías iniciales para ropa
@@ -1669,7 +1846,7 @@
                 });
             }
             
-            // NUEVO: Configurar eventos para guardar color del sitio
+            // Configurar eventos para guardar color del sitio
             if (saveSiteColorBtn) {
                 saveSiteColorBtn.addEventListener('click', function() {
                     // Verificar si el usuario es administrador
@@ -1681,7 +1858,7 @@
                 });
             }
             
-            // NUEVO: Configurar eventos para restablecer color del sitio
+            // Configurar eventos para restablecer color del sitio
             if (resetSiteColorBtn) {
                 resetSiteColorBtn.addEventListener('click', function() {
                     // Verificar si el usuario es administrador
@@ -1690,6 +1867,54 @@
                         return;
                     }
                     resetSiteColor();
+                });
+            }
+            
+            // Configurar eventos para guardar número de WhatsApp
+            if (saveWhatsAppBtn) {
+                saveWhatsAppBtn.addEventListener('click', function() {
+                    // Verificar si el usuario es administrador
+                    if (!currentUser || currentUser.type !== 'admin') {
+                        alert('Solo los administradores pueden cambiar el número de WhatsApp');
+                        return;
+                    }
+                    saveWhatsAppNumber();
+                });
+            }
+            
+            // Configurar eventos para restablecer número de WhatsApp
+            if (resetWhatsAppBtn) {
+                resetWhatsAppBtn.addEventListener('click', function() {
+                    // Verificar si el usuario es administrador
+                    if (!currentUser || currentUser.type !== 'admin') {
+                        alert('Solo los administradores pueden restablecer el número de WhatsApp');
+                        return;
+                    }
+                    resetWhatsAppNumber();
+                });
+            }
+            
+            // NUEVO: Configurar eventos para guardar texto del hero
+            if (saveHeroTextBtn) {
+                saveHeroTextBtn.addEventListener('click', function() {
+                    // Verificar si el usuario es administrador
+                    if (!currentUser || currentUser.type !== 'admin') {
+                        alert('Solo los administradores pueden cambiar el texto de la página principal');
+                        return;
+                    }
+                    saveHeroText();
+                });
+            }
+            
+            // NUEVO: Configurar eventos para restablecer texto del hero
+            if (resetHeroTextBtn) {
+                resetHeroTextBtn.addEventListener('click', function() {
+                    // Verificar si el usuario es administrador
+                    if (!currentUser || currentUser.type !== 'admin') {
+                        alert('Solo los administradores pueden restablecer el texto de la página principal');
+                        return;
+                    }
+                    resetHeroText();
                 });
             }
             
@@ -1963,6 +2188,21 @@
                     
                     const heroDescription = document.createElement('p');
                     heroDescription.textContent = category.description;
+                    
+                    // Si esta categoría tiene texto personalizado en localStorage, usarlo
+                    const categoryTitleKey = `tuscurvascatherotitle_${category.id}`;
+                    const categoryDescKey = `tuscurvascatherodesscription_${category.id}`;
+                    
+                    const savedCatTitle = localStorage.getItem(categoryTitleKey);
+                    const savedCatDesc = localStorage.getItem(categoryDescKey);
+                    
+                    if (savedCatTitle) {
+                        heroTitle.textContent = savedCatTitle;
+                    }
+                    
+                    if (savedCatDesc) {
+                        heroDescription.textContent = savedCatDesc;
+                    }
                     
                     heroContainer.appendChild(heroTitle);
                     heroContainer.appendChild(heroDescription);
@@ -2276,7 +2516,7 @@
                             </div>
                             <div class="form-group">
                                 <label for="product-sizes">Tallas (separadas por comas):</label>
-                                <input type="text" id="product-sizes" placeholder="Ej: S, M, L, XL">
+                                    <input type="text" id="product-sizes" placeholder="Ej: S, M, L, XL">
                             </div>
                             <div class="form-group">
                                 <label>Medio del Producto:</label>
@@ -2820,8 +3060,11 @@
                 const total = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
                 message += `%0ATotal: $${total.toFixed(2)}`;
                 
+                // Obtener número de WhatsApp desde localStorage o usar el predeterminado
+                const whatsappNumber = localStorage.getItem('tuscurvaswhatsapp') || '+573196968646';
+                
                 // Redirigir a WhatsApp
-                window.location.href = `https://wa.me/+573196968646?text=${message}`;
+                window.location.href = `https://wa.me/${whatsappNumber}?text=${message}`;
                 
                 // Limpiar carrito
                 cart = [];
